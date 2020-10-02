@@ -1,7 +1,21 @@
 {
-  "extends": "./snowpack.config.json",
+  "extends": "@snowpack/app-scripts-svelte",
+  "mount": {
+    "public": "/",
+    "src": "/blueprint-web-ide/_dist_"
+  },
+  "plugins": [
+    ["@snowpack/plugin-webpack"]
+  ],
+  "installOptions": {
+    "installTypes": true,
+    "treeshake": true
+  },
+  "alias": {
+    "@ide": "./src"
+  },
   "buildOptions": {
-    "sourceMaps": true,
-    "baseUrl": "/blueprint-web-ide/"
+    "baseUrl": "/blueprint-web-ide",
+    "sourceMaps": true
   }
 }
