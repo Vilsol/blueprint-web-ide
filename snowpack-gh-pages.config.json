@@ -1,0 +1,7 @@
+{
+  "extends": "./snowpack.config.json",
+  "buildOptions": {
+    "sourceMaps": true,
+    "baseUrl": "/blueprint-web-ide/"
+  }
+}

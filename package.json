@@ -2,6 +2,7 @@
   "scripts": {
     "dev": "snowpack dev",
     "build": "snowpack build",
+    "build:gh-pages": "snowpack build --config snowpack-gh-pages.config.json",
     "test": "jest",
     "reload": "snowpack --reload"
   },
