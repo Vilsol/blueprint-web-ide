@@ -107,7 +107,8 @@
   }
 
   function releaseMouse(pin: PinDefinition) {
-    const connection = get(drawnConnection);
+  // TODO Remove cast on svelte version >= 3.30
+    const connection = get(drawnConnection) as any;
 
     if (!connection) {
       return;

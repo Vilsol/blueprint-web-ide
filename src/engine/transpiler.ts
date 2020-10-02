@@ -15,6 +15,7 @@ export const Compile = (): string => {
     return ""
   }
 
+  // TODO Remove cast on svelte version >= 3.30
   return TranspileTile(get(values[0] as Readable<Tile>));
 }
 

@@ -40,7 +40,8 @@
     let swap = false;
 
     if ($connection.sourceTile) {
-      const sourceTile = get($connection.sourceTile.tile);
+      // TODO Remove cast on svelte version >= 3.30
+      const sourceTile = get($connection.sourceTile.tile) as any;
       const sourceBounds = sourceTile.metadata.pinComponents![
         $connection.sourceTile.pin.name
       ].getBoundingClientRect();
@@ -57,7 +58,8 @@
     }
 
     if ($connection.targetTile) {
-      const targetTile = get($connection.targetTile.tile);
+      // TODO Remove cast on svelte version >= 3.30
+      const targetTile = get($connection.targetTile.tile) as any;
       const targetBounds = targetTile.metadata.pinComponents![
         $connection.targetTile.pin.name
       ].getBoundingClientRect();
