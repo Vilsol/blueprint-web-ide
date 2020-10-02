@@ -28,7 +28,7 @@
 
   import { GenerateGUID } from "./utils/random";
   import { GetTileDefinition } from "./models/TileDefinition";
-  import { tiles, connections, drawnConnection } from "@ide/store";
+  import { tiles, connections, drawnConnection, tileSelection } from "@ide/store";
   import { derived, get, writable } from "svelte/store";
   import { Compile } from "./engine/transpiler";
   import { onMount } from "svelte";
@@ -192,6 +192,24 @@
       };
     }
   };
+
+  const onDeletePressed = (event: KeyboardEvent) => {
+    if (event.key !== 'Delete') {
+      return;
+    }
+
+    let toDelete = get(tileSelection);
+    tiles.update(tiles => {
+      for (let tile of toDelete) {
+        delete tiles[tile];
+      }
+      return tiles;
+    })
+    
+
+    tileSelection.clear();
+  };
+
 </script>
 
 <style>
@@ -232,6 +250,9 @@
       );
   }
 </style>
+
+<svelte:window
+  on:keyup={onDeletePressed}/>
 
 <div class="App" style="background-position: {panX}px {panY}px">
   <div class="HUD">

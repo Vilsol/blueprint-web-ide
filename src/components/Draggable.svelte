@@ -3,7 +3,7 @@
   import type { PinDefinition } from "@ide/models/Pin";
   import type { Tile } from "@ide/models/Tile";
   import { PIN_INPUT, PIN_OUTPUT } from "@ide/models/Pin";
-  import { drawnConnection, connections } from "@ide/store";
+  import { drawnConnection, connections, tiles, tileSelection } from "@ide/store";
   import { GenerateGUID } from "@ide/utils/random";
   import { onMount } from "svelte";
   import { derived, get } from "svelte/store";
@@ -28,9 +28,13 @@
 
   const pinBindings: { [key: string]: HTMLElement } = {};
 
+  const selected = derived(tileSelection, $selection => $selection.has(get(tile).metadata.id))
+
   onMount(() => {
     // TODO Make not ugly
     (self as any).ide_component = tile;
+    (self as any).handleDragStart = handleDragStart;
+    (self as any).handleDragEnd = handleDragEnd;
 
     tile.update((t) => {
       return {
@@ -44,7 +48,30 @@
     });
   });
 
-  function handleDragStart(event: MouseEvent) {
+  function handleSelection(event: MouseEvent) {
+    if (!event.ctrlKey) {
+      return;
+    }
+
+    tileSelection.toggle(get(tile));
+  }
+
+  function handleDragStart(event: MouseEvent, original = true) {
+    if (event.ctrlKey) {
+      return; // Let's ignore ctrl clicks
+    }
+    
+    const selected = get(tileSelection);
+    const id = get(tile).metadata.id;
+    if (selected.has(id) && original) {
+        for (const tile of Object.values(get(tiles)).map(get)) {
+          const tileId = tile.metadata.id;
+          if (id !== tileId && selected.has(tileId)) {
+            tile.metadata.component.handleDragStart(event, false);
+          }
+        }
+    }
+
     dragging = true;
     startX = event.clientX - self.offsetLeft;
     startY = event.clientY - self.offsetTop;
@@ -68,6 +95,23 @@
           },
         };
       });
+    }
+  }
+
+  function handleDragEnd(event: MouseEvent, original = true) {
+    if (dragging) {
+      const selected = get(tileSelection);
+      const id = get(tile).metadata.id;
+      if (selected.has(id) && original) {
+        for (const tile of Object.values(get(tiles)).map(get)) {
+          const tileId = tile.metadata.id;
+          if (id !== tileId && selected.has(tileId)) {
+            tile.metadata.component.handleDragEnd(event, false);
+          }
+        }
+      }
+
+      dragging = false;
     }
   }
 
@@ -167,6 +211,7 @@
     position: absolute;
     user-select: none;
     cursor: auto;
+    padding: 1px;
 
     &.Dragging {
       z-index: 1;
@@ -180,6 +225,12 @@
       background: rgb(171 64 13);
       cursor: grab;
       padding: 10px;
+    }
+
+    &.Selected {
+      border: 1px solid lighten(rgb(171 64 13), 50%);
+      box-shadow: 0px 0px 3px 0px lighten(rgb(171 64 13), 50%);
+      padding: 0px;
     }
 
     & .Body {
@@ -233,14 +284,15 @@
 
 <svelte:window
   on:mousemove={handleMouseMove}
-  on:mouseup={() => (dragging = false)} />
+  on:mouseup={handleDragEnd} />
 
 <div
   class="Draggable panzoom-exclude"
+  class:Selected={$selected}
   style="top: {$tile.metadata.position.y}px; left: {$tile.metadata.position.x}px"
   bind:this={self}
   class:Dragging={dragging === true}>
-  <div class="Header" on:mousedown={handleDragStart}>
+  <div class="Header" on:mousedown={handleDragStart} on:click={handleSelection}>
     <span>{$tile.definition.name}</span>
   </div>
   <div class="Body">

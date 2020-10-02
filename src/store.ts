@@ -42,3 +42,29 @@ export const connections = (() => {
 })();
 
 export const drawnConnection = writable(undefined as Connection | undefined)
+
+export interface WritableTileSelection extends Writable<Set<String>> {
+  toggle: (tile: Tile) => void;
+} 
+
+export const tileSelection = (() => {
+
+  const { subscribe, set, update } = writable(new Set());
+
+  return {
+    subscribe,
+    set,
+    update,
+    toggle: (tile: Tile) => {
+      update((s) => {
+        if (!s.delete(tile.metadata.id)) {
+          s.add(tile.metadata.id);
+        }
+        return s;
+      })
+    },
+    clear: () => {
+      update((_) => new Set());
+    }
+  }
+})() as WritableTileSelection;
