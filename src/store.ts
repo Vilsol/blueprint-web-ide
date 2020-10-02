@@ -5,6 +5,10 @@ import type { Tile } from "./models/Tile";
 export type TileMap = { [key: string]: Writable<Tile> };
 export type ConnectionMap = { [key: string]: Writable<Connection> };
 
+export interface WritableTileMap extends Writable<TileMap> {
+  add: (tile: Tile) => Tile;
+}
+
 export const tiles = (() => {
   const { subscribe, set, update } = writable({} as TileMap);
 
@@ -19,7 +23,7 @@ export const tiles = (() => {
       })
     }
   }
-})();
+})() as WritableTileMap;
 
 export const connections = (() => {
   const { subscribe, set, update } = writable({} as ConnectionMap);

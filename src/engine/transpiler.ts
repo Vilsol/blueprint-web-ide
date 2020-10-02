@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get, Readable } from "svelte/store"
 import { tiles } from "@ide/store"
 import { GetLanguageTileDefinition } from "@ide/models/LanguageTileDefinition";
 import type { Tile } from "@ide/models/Tile";
@@ -7,13 +7,15 @@ import { PIN_INPUT } from "@ide/models/Pin";
 const language = "javascript";
 
 export const Compile = (): string => {
-  const allTiles = get(tiles);
+  // TODO Remove cast on svelte version >= 3.30
+  const allTiles = get(tiles) as any;
+  const values = Object.values(allTiles);
 
-  if (allTiles.length < 1) {
+  if (values.length < 1) {
     return ""
   }
 
-  return TranspileTile(get(Object.values(allTiles)[0] as Tile));
+  return TranspileTile(get(values[0] as Readable<Tile>));
 }
 
 const TranspileTile = (tile: Tile): string => {
@@ -38,7 +40,7 @@ const TranspileTile = (tile: Tile): string => {
     Object.entries(tile.metadata.pinConnections).forEach(([pin, connection]) => {
       if (tile.definition.pins[pin].position === PIN_INPUT) {
         // TODO Check for existence
-        replacements[pin] = TranspileTile(get(connection.sourceTile?.tile));
+        replacements[pin] = TranspileTile(get(connection.sourceTile?.tile!));
       }
     });
 
