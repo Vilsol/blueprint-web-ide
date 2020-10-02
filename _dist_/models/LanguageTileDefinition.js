@@ -18,3 +18,4 @@ export const GetLanguageTileDefinition = (language, name) => {
   }
   return void 0;
 };
+//# sourceMappingURL=LanguageTileDefinition.js.map

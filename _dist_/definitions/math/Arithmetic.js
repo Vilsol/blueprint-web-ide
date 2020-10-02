@@ -39,3 +39,4 @@ export const Subtract = {
     }
   }
 };
+//# sourceMappingURL=Arithmetic.js.map

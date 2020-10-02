@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["/home/runner/work/blueprint-web-ide/blueprint-web-ide/src/definitions/index.ts"],
+  "sourcesContent": ["export * from \"./math\";"],
+  "mappings": "AAAA;",
+  "names": []
+}

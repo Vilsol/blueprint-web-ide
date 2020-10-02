@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["/home/runner/work/blueprint-web-ide/blueprint-web-ide/src/definitions/math/Arithmetic.ts"],
+  "sourcesContent": ["import { PIN_INPUT, PIN_OUTPUT } from \"@ide/models/Pin\";\nimport type { TileDefinition } from \"@ide/models/TileDefinition\";\n\nexport const Sum: TileDefinition = {\n  name: \"Sum\",\n  pins: {\n    a: {\n      name: \"a\",\n      position: PIN_INPUT,\n      type: \"Float\"\n    },\n    b: {\n      name: \"b\",\n      position: PIN_INPUT,\n      type: \"Float\"\n    },\n    result: {\n      name: \"result\",\n      position: PIN_OUTPUT,\n      type: \"Float\"\n    }\n  }\n}\n\nexport const Subtract: TileDefinition = {\n  name: \"Subtract\",\n  pins: {\n    a: {\n      name: \"a\",\n      position: PIN_INPUT,\n      type: \"Float\"\n    },\n    b: {\n      name: \"b\",\n      position: PIN_INPUT,\n      type: \"Float\"\n    },\n    result: {\n      name: \"result\",\n      position: PIN_OUTPUT,\n      type: \"Float\"\n    }\n  }\n}\n"],
+  "mappings": "AAAA;AAGO,aAAM,MAAsB;AAAA,EACjC,MAAM;AAAA,EACN,MAAM;AAAA,IACJ,GAAG;AAAA,MACD,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA,IAER,GAAG;AAAA,MACD,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA,IAER,QAAQ;AAAA,MACN,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA;AAAA;AAKL,aAAM,WAA2B;AAAA,EACtC,MAAM;AAAA,EACN,MAAM;AAAA,IACJ,GAAG;AAAA,MACD,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA,IAER,GAAG;AAAA,MACD,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA,IAER,QAAQ;AAAA,MACN,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA;AAAA;",
+  "names": []
+}

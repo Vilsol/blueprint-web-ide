@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["/home/runner/work/blueprint-web-ide/blueprint-web-ide/src/models/Pin.ts"],
+  "sourcesContent": ["export type PinPosition = string;\n\nexport const PIN_INPUT: PinPosition = \"PIN_INPUT\";\nexport const PIN_OUTPUT: PinPosition = \"PIN_OUTPUT\";\n\nexport interface PinDefinition {\n  name: string;\n  position: PinPosition;\n  type: string;\n}"],
+  "mappings": "AAEO,aAAM,YAAyB;AAC/B,aAAM,aAA0B;",
+  "names": []
+}

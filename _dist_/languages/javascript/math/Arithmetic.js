@@ -7,3 +7,4 @@ export const SubtractJS = {
   tile: Subtract,
   definition: "({{a}} - {{b}})"
 };
+//# sourceMappingURL=Arithmetic.js.map

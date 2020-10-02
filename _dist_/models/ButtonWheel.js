@@ -18,3 +18,4 @@ RegisterButton("Draggable", {
   icon: "B",
   action: () => console.log("CLICK")
 });
+//# sourceMappingURL=ButtonWheel.js.map

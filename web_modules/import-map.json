@@ -1,8 +1,5 @@
 {
   "imports": {
-    "@panzoom/panzoom": "./@panzoom/panzoom.js",
-    "svelte": "./svelte.js",
-    "svelte/internal": "./svelte/internal.js",
     "svelte/store": "./svelte/store.js"
   }
 }

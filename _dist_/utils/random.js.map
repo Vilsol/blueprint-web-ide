@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["/home/runner/work/blueprint-web-ide/blueprint-web-ide/src/utils/random.ts"],
+  "sourcesContent": ["export function GenerateGUID(): string {\n  return Array.from(window.crypto.getRandomValues(new Uint32Array(4))).map(n => n.toString(16)).join('-')\n}"],
+  "mappings": "AAAO;AACL,SAAO,MAAM,KAAK,OAAO,OAAO,gBAAgB,IAAI,YAAY,KAAK,IAAI,OAAK,EAAE,SAAS,KAAK,KAAK;AAAA;",
+  "names": []
+}

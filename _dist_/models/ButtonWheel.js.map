@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["/home/runner/work/blueprint-web-ide/blueprint-web-ide/src/models/ButtonWheel.ts"],
+  "sourcesContent": ["import type { Readable } from \"svelte/store\";\n\nexport interface ButtonWheelPoint<T> {\n  pageX: number;\n  pageY: number;\n  offsetX: number;\n  offsetY: number;\n  context: undefined | Readable<T>\n}\n\nexport interface ButtonWheelButton<T> {\n  text: string;\n  icon: string;\n  action: (context: T) => void;\n}\n\nconst ButtonWheelButtons: { [key: string]: ButtonWheelButton<any>[] } = {};\nlet buttonsFetched = false;\n\nexport const RegisterButton = (contextType: string, button: ButtonWheelButton<any>) => {\n  if (buttonsFetched) {\n    throw Error(\"Tried to register a button after a definition was already requested\");\n  }\n\n  // TODO Validate\n  ButtonWheelButtons[contextType] = [...ButtonWheelButtons[contextType], button];\n}\n\nexport const GetButtons = (contextType: string): ButtonWheelButton<any>[] => {\n  buttonsFetched = true;\n\n  if (contextType in ButtonWheelButtons) {\n    return ButtonWheelButtons[contextType];\n  }\n\n  return [];\n}\n\nRegisterButton(\"Draggable\", {\n  text: \"A\",\n  icon: \"B\",\n  action: () => console.log(\"CLICK\")\n});"],
+  "mappings": "AAgBA,MAAM,qBAAkE;AACxE,IAAI,iBAAiB;AAEd,aAAM,iBAAiB,CAAC,aAAqB;AAClD,MAAI;AACF,UAAM,MAAM;AAAA;AAId,qBAAmB,eAAe,CAAC,GAAG,mBAAmB,cAAc;AAAA;AAGlE,aAAM,aAAa,CAAC;AACzB,mBAAiB;AAEjB,MAAI,eAAe;AACjB,WAAO,mBAAmB;AAAA;AAG5B,SAAO;AAAA;AAGT,eAAe,aAAa;AAAA,EAC1B,MAAM;AAAA,EACN,MAAM;AAAA,EACN,QAAQ,MAAM,QAAQ,IAAI;AAAA;",
+  "names": []
+}

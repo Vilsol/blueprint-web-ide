@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["/home/runner/work/blueprint-web-ide/blueprint-web-ide/src/definitions/variables/Variables.ts"],
+  "sourcesContent": ["import { PIN_INPUT, PIN_OUTPUT } from \"@ide/models/Pin\";\nimport type { TileDefinition } from \"@ide/models/TileDefinition\";\n\nexport const Assign: TileDefinition = {\n  name: \"Assign\",\n  pins: {\n    name: {\n      name: \"name\",\n      position: PIN_INPUT,\n      type: \"String\"\n    },\n    value: {\n      name: \"value\",\n      position: PIN_INPUT,\n      type: \"TODO\"\n    }\n  }\n}\n\nexport const Read: TileDefinition = {\n  name: \"Assign\",\n  pins: {\n    name: {\n      name: \"name\",\n      position: PIN_INPUT,\n      type: \"String\"\n    },\n    value: {\n      name: \"value\",\n      position: PIN_OUTPUT,\n      type: \"TODO\"\n    }\n  }\n}"],
+  "mappings": "AAAA;AAGO,aAAM,SAAyB;AAAA,EACpC,MAAM;AAAA,EACN,MAAM;AAAA,IACJ,MAAM;AAAA,MACJ,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA,IAER,OAAO;AAAA,MACL,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA;AAAA;AAKL,aAAM,OAAuB;AAAA,EAClC,MAAM;AAAA,EACN,MAAM;AAAA,IACJ,MAAM;AAAA,MACJ,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA,IAER,OAAO;AAAA,MACL,MAAM;AAAA,MACN,UAAU;AAAA,MACV,MAAM;AAAA;AAAA;AAAA;",
+  "names": []
+}

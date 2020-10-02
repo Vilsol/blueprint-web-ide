@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["/home/runner/work/blueprint-web-ide/blueprint-web-ide/src/models/TileDefinition.ts"],
+  "sourcesContent": ["import type { PinDefinition } from \"./Pin\";\n\nexport interface TileDefinition {\n  name: string;\n  pins: { [key: string]: PinDefinition };\n}\n\nconst TileDefinitions: { [key: string]: TileDefinition } = {};\nlet definitionFetched = false;\n\nexport const RegisterTileDefinition = (definition: TileDefinition) => {\n  if (definitionFetched) {\n    throw Error(\"Tried to register a definition after a definition was already requested\");\n  }\n\n  // TODO Validate\n  TileDefinitions[definition.name] = definition;\n}\n\nexport const GetTileDefinition = (name: string): TileDefinition | undefined => {\n  definitionFetched = true;\n\n  if (name in TileDefinitions) {\n    return TileDefinitions[name];\n  }\n\n  // TODO Log Error\n\n  return undefined;\n}"],
+  "mappings": "AAOA,MAAM,kBAAqD;AAC3D,IAAI,oBAAoB;AAEjB,aAAM,yBAAyB,CAAC;AACrC,MAAI;AACF,UAAM,MAAM;AAAA;AAId,kBAAgB,WAAW,QAAQ;AAAA;AAG9B,aAAM,oBAAoB,CAAC;AAChC,sBAAoB;AAEpB,MAAI,QAAQ;AACV,WAAO,gBAAgB;AAAA;AAKzB,SAAO;AAAA;",
+  "names": []
+}

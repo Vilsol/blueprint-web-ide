@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["/home/runner/work/blueprint-web-ide/blueprint-web-ide/src/languages/javascript/math/Arithmetic.ts"],
+  "sourcesContent": ["import type { LanguageTileDefinition } from \"@ide/models/LanguageTileDefinition\";\nimport { Subtract, Sum } from \"@ide/definitions\";\n\nexport const SumJS: LanguageTileDefinition = {\n  tile: Sum,\n  definition: \"({{a}} + {{b}})\"\n}\n\nexport const SubtractJS: LanguageTileDefinition = {\n  tile: Subtract,\n  definition: \"({{a}} - {{b}})\"\n}"],
+  "mappings": "AACA;AAEO,aAAM,QAAgC;AAAA,EAC3C,MAAM;AAAA,EACN,YAAY;AAAA;AAGP,aAAM,aAAqC;AAAA,EAChD,MAAM;AAAA,EACN,YAAY;AAAA;",
+  "names": []
+}
