@@ -1,21 +1,17 @@
-function noop() { }
-function safe_not_equal(a, b) {
-    return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
-}
-function subscribe(store, ...callbacks) {
-    if (store == null) {
-        return noop;
-    }
-    const unsub = store.subscribe(...callbacks);
-    return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
-}
-function get_store_value(store) {
-    let value;
-    subscribe(store, _ => value = _)();
-    return value;
-}
+import { y as noop, s as safe_not_equal, z as subscribe, r as run_all, D as is_function } from '../common/index-04a0fc9f.js';
+export { E as get } from '../common/index-04a0fc9f.js';
 
 const subscriber_queue = [];
+/**
+ * Creates a `Readable` store that allows reading by subscription.
+ * @param value initial value
+ * @param {StartStopNotifier}start start and stop notifications for subscriptions
+ */
+function readable(value, start) {
+    return {
+        subscribe: writable(value, start).subscribe
+    };
+}
 /**
  * Create a `Writable` store that allows both updating and reading by subscription.
  * @param {*=}value initial value
@@ -66,5 +62,46 @@ function writable(value, start = noop) {
     }
     return { set, update, subscribe };
 }
+function derived(stores, fn, initial_value) {
+    const single = !Array.isArray(stores);
+    const stores_array = single
+        ? [stores]
+        : stores;
+    const auto = fn.length < 2;
+    return readable(initial_value, (set) => {
+        let inited = false;
+        const values = [];
+        let pending = 0;
+        let cleanup = noop;
+        const sync = () => {
+            if (pending) {
+                return;
+            }
+            cleanup();
+            const result = fn(single ? values[0] : values, set);
+            if (auto) {
+                set(result);
+            }
+            else {
+                cleanup = is_function(result) ? result : noop;
+            }
+        };
+        const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
+            values[i] = value;
+            pending &= ~(1 << i);
+            if (inited) {
+                sync();
+            }
+        }, () => {
+            pending |= (1 << i);
+        }));
+        inited = true;
+        sync();
+        return function stop() {
+            run_all(unsubscribers);
+            cleanup();
+        };
+    });
+}
 
-export { get_store_value as get, writable };
+export { derived, readable, writable };

@@ -1,4 +1,4 @@
-import {get} from "../../web_modules/svelte/store.js";
+import {get} from "../../../web_modules/svelte/store.js";
 import {tiles} from "../store.js";
 import {GetLanguageTileDefinition} from "../models/LanguageTileDefinition.js";
 import {PIN_INPUT} from "../models/Pin.js";

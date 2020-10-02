@@ -1,4 +1,4 @@
-import {writable} from "../web_modules/svelte/store.js";
+import {writable} from "../../web_modules/svelte/store.js";
 export const tiles = (() => {
   const {subscribe, set, update} = writable({});
   return {
