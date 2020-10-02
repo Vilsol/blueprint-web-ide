@@ -1,0 +1,14 @@
+body{margin:0;background:rgb(36, 36, 36);color:white;font-family:"Roboto", sans-serif}.App.svelte-13ojy8i{width:100vw;height:100vh}.HUD.svelte-13ojy8i{position:absolute;z-index:9999999999}.Container.svelte-13ojy8i{width:16000px;height:9000px;outline:3px solid rgb(156 156 156);background:repeating-linear-gradient(
+        00deg,
+        rgba(0 0 0 / 0%),
+        rgba(0 0 0 / 0) 39px,
+        rgb(55, 55, 55) 0,
+        rgb(55, 55, 55) 40px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(0 0 0 / 0%),
+        rgba(0 0 0 / 0) 39px,
+        rgb(55, 55, 55) 0,
+        rgb(55, 55, 55) 40px
+      )}
