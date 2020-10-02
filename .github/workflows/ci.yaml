@@ -21,8 +21,8 @@ jobs:
       - name: Build
         run: yarn run build
 
-      - name: Test
-        run: yarn run test
+      #- name: Test
+      #  run: yarn run test
 
   release:
     name: Release
