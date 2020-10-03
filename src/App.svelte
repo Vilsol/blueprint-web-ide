@@ -20,7 +20,7 @@
   import DrawingConnection from "./components/DrawingConnection.svelte";
   import Connection from "./components/Connection.svelte";
 
-  import type { Tile } from "@ide/models/Tile";
+  //import type { Tile } from "@ide/models/Tile";
   import type { Readable } from "svelte/store";
   import type { Connection as ConnectionModel } from "@ide/models/Connection";
   import type { PanzoomObject } from "@panzoom/panzoom";
@@ -198,7 +198,7 @@
       return;
     }
 
-    let toDelete = get(tileSelection);
+    let toDelete: Set<string> = get(tileSelection);
     tiles.update(tiles => {
       for (let tile of toDelete) {
         delete tiles[tile];

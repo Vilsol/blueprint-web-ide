@@ -4,10 +4,11 @@
   import type { Tile } from "@ide/models/Tile";
   import { PIN_INPUT, PIN_OUTPUT } from "@ide/models/Pin";
   import { drawnConnection, connections, tiles, tileSelection } from "@ide/store";
+  import type { TileMap } from "@ide/store";
   import { GenerateGUID } from "@ide/utils/random";
   import { onMount } from "svelte";
   import { derived, get } from "svelte/store";
-  import type { Writable } from "svelte/store";
+  import type { Writable, Readable } from "svelte/store";
 
   const snapping = 1;
 
@@ -28,7 +29,7 @@
 
   const pinBindings: { [key: string]: HTMLElement } = {};
 
-  const selected = derived(tileSelection, $selection => $selection.has(get(tile).metadata.id))
+  const selected: Readable<boolean> = derived(tileSelection, $selection => $selection.has((get(tile) as Tile).metadata.id))
 
   onMount(() => {
     // TODO Make not ugly
@@ -61,13 +62,13 @@
       return; // Let's ignore ctrl clicks
     }
     
-    const selected = get(tileSelection);
-    const id = get(tile).metadata.id;
+    const selected = get(tileSelection) as Set<string>;
+    const id = (get(tile) as Tile).metadata.id;
     if (selected.has(id) && original) {
-        for (const tile of Object.values(get(tiles)).map(get)) {
+        for (const tile of (Object.values(get(tiles) as TileMap).map(get) as Tile[])) {
           const tileId = tile.metadata.id;
           if (id !== tileId && selected.has(tileId)) {
-            tile.metadata.component.handleDragStart(event, false);
+            (tile.metadata.component as any).handleDragStart(event, false);
           }
         }
     }
@@ -100,13 +101,13 @@
 
   function handleDragEnd(event: MouseEvent, original = true) {
     if (dragging) {
-      const selected = get(tileSelection);
-      const id = get(tile).metadata.id;
+      const selected = get(tileSelection) as Set<string>;
+      const id = (get(tile) as Tile).metadata.id;
       if (selected.has(id) && original) {
-        for (const tile of Object.values(get(tiles)).map(get)) {
+        for (const tile of (Object.values(get(tiles) as TileMap).map(get) as Tile[])) {
           const tileId = tile.metadata.id;
           if (id !== tileId && selected.has(tileId)) {
-            tile.metadata.component.handleDragEnd(event, false);
+            (tile.metadata.component as any).handleDragEnd(event, false);
           }
         }
       }
@@ -297,7 +298,7 @@
   </div>
   <div class="Body">
     <div class="Inputs">
-      {#each Object.entries($tile.definition.pins) as [name, pin], i}
+      {#each Object.entries($tile.definition.pins) as [_name, pin], _i}
         {#if pin.position === PIN_INPUT}
           <div
             class="Pin"
@@ -310,7 +311,7 @@
       {/each}
     </div>
     <div class="Outputs">
-      {#each Object.entries($tile.definition.pins) as [name, pin], i}
+      {#each Object.entries($tile.definition.pins) as [_name, pin], _i}
         {#if pin.position === PIN_OUTPUT}
           <div
             class="Pin"

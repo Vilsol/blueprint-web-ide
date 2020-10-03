@@ -43,8 +43,9 @@ export const connections = (() => {
 
 export const drawnConnection = writable(undefined as Connection | undefined)
 
-export interface WritableTileSelection extends Writable<Set<String>> {
+export interface WritableTileSelection extends Writable<Set<string>> {
   toggle: (tile: Tile) => void;
+  clear: () => void;
 } 
 
 export const tileSelection = (() => {
