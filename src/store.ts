@@ -42,3 +42,40 @@ export const connections = (() => {
 })();
 
 export const drawnConnection = writable(undefined as Connection | undefined)
+
+export interface WritableTileSelection extends Writable<Set<string>> {
+  toggle: (tile: Tile) => void;
+  clear: () => void;
+} 
+
+export const tileSelection = (() => {
+
+  const { subscribe, set, update } = writable(new Set());
+
+  return {
+    subscribe,
+    set,
+    update,
+    toggle: (tile: Tile) => {
+      update((s) => {
+        if (!s.delete(tile.metadata.id)) {
+          s.add(tile.metadata.id);
+        }
+        return s;
+      })
+    },
+    clear: () => {
+      update((_) => new Set());
+    }
+  }
+})() as WritableTileSelection;
+
+export interface DraggingSession {
+  startX: number;
+  startY: number;
+  startPageX: number;
+  startPageY: number;
+  tile: Tile;
+}
+
+export const draggingSession = writable(null) as Writable<DraggingSession | null>;

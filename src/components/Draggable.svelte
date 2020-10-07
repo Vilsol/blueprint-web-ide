@@ -3,11 +3,12 @@
   import type { PinDefinition } from "@ide/models/Pin";
   import type { Tile } from "@ide/models/Tile";
   import { PIN_INPUT, PIN_OUTPUT } from "@ide/models/Pin";
-  import { drawnConnection, connections } from "@ide/store";
+  import { drawnConnection, connections, tiles, tileSelection, draggingSession } from "@ide/store";
+  import type { TileMap, DraggingSession } from "@ide/store";
   import { GenerateGUID } from "@ide/utils/random";
   import { onMount } from "svelte";
   import { derived, get } from "svelte/store";
-  import type { Writable } from "svelte/store";
+  import type { Writable, Readable } from "svelte/store";
 
   const snapping = 1;
 
@@ -18,20 +19,15 @@
 
   let self: HTMLElement;
 
-  let dragging = false;
-
-  let startX = 0;
-  let startY = 0;
-
-  let startPageX = 0;
-  let startPageY = 0;
-
   const pinBindings: { [key: string]: HTMLElement } = {};
+
+  const selected: Readable<boolean> = derived(tileSelection, $selection => $selection.has((get(tile) as Tile).metadata.id))
+
+  let dragging: Readable<boolean>;
 
   onMount(() => {
     // TODO Make not ugly
     (self as any).ide_component = tile;
-
     tile.update((t) => {
       return {
         ...t,
@@ -42,20 +38,71 @@
         },
       };
     });
+
+    dragging = derived([tile, draggingSession, tileSelection], ([$tile, $dragging, $selection]) => {
+      return $dragging !== null && ($tile.metadata.id === $dragging.tile.metadata.id || 
+        ($selection.has($dragging.tile.metadata.id) && $selection.has($tile.metadata.id)));
+    });
   });
 
-  function handleDragStart(event: MouseEvent) {
-    dragging = true;
-    startX = event.clientX - self.offsetLeft;
-    startY = event.clientY - self.offsetTop;
-    startPageX = event.pageX;
-    startPageY = event.pageY;
+  function handleSelection(event: MouseEvent) {
+    if (!event.ctrlKey) {
+      return;
+    }
+
+    tileSelection.toggle(get(tile));
+  }
+
+  function handleDragStart(event: MouseEvent, original = true) {
+    if (event.ctrlKey) {
+      return; // Let's ignore ctrl clicks
+    }    
+
+    draggingSession.set({
+      startX: event.clientX - self.offsetLeft,
+      startY: event.clientY - self.offsetTop,
+      startPageX: event.pageX,
+      startPageY: event.pageY,
+      tile: get(tile),
+    });
   }
 
   function handleMouseMove(event: MouseEvent) {
-    if (dragging) {
-      const newX = startPageX - startX + ((event.pageX - startPageX) / scaling);
-      const newY = startPageY - startY + ((event.pageY - startPageY) / scaling);
+    let drag = get(draggingSession) as DraggingSession | null;
+    const thisTile = get(tile) as Tile;
+    let tileId = thisTile.metadata.id;
+    if (drag && drag.tile.metadata.id === tileId) {
+      const newX = drag.startPageX - drag.startX + ((event.pageX - drag.startPageX) / scaling);
+      const newY = drag.startPageY - drag.startY + ((event.pageY - drag.startPageY) / scaling);
+
+      const selection = get(tileSelection) as Set<string>;
+      if (selection.has(tileId)) {
+        const { x: oldX, y: oldY } = thisTile.metadata.position;
+        const dx = newX - oldX;
+        const dy = newY - oldY;
+        const allTiles = get(tiles) as TileMap;
+        [...selection]
+          .filter(id => id !== tileId)
+          .map(id => allTiles[id])
+          .forEach(tile => {
+            tile.update((t) => {
+              const { x: oldX, y: oldY } = t.metadata.position;
+              const newX = oldX + dx;
+              const newY = oldY + dy;
+              return {
+                ...t,
+                metadata: {
+                  ...t.metadata,
+                  position: {
+                    x: newX - (newX % snapping),
+                    y: newY - (newY % snapping),
+                  }
+                }
+              };
+            });
+          });
+      }
+        
       tile.update((t) => {
         return {
           ...t,
@@ -68,6 +115,13 @@
           },
         };
       });
+    }
+  }
+
+  function handleDragEnd(event: MouseEvent, original = true) {
+    let drag = get(draggingSession) as DraggingSession | null;
+    if (drag !== null && drag.tile.metadata.id === (get(tile) as Tile).metadata.id) {
+      draggingSession.set(null);
     }
   }
 
@@ -167,6 +221,7 @@
     position: absolute;
     user-select: none;
     cursor: auto;
+    padding: 1px;
 
     &.Dragging {
       z-index: 1;
@@ -180,6 +235,12 @@
       background: rgb(171 64 13);
       cursor: grab;
       padding: 10px;
+    }
+
+    &.Selected {
+      border: 1px solid lighten(rgb(171 64 13), 50%);
+      box-shadow: 0px 0px 3px 0px lighten(rgb(171 64 13), 50%);
+      padding: 0px;
     }
 
     & .Body {
@@ -233,19 +294,20 @@
 
 <svelte:window
   on:mousemove={handleMouseMove}
-  on:mouseup={() => (dragging = false)} />
+  on:mouseup={handleDragEnd} />
 
 <div
   class="Draggable panzoom-exclude"
+  class:Selected={$selected}
   style="top: {$tile.metadata.position.y}px; left: {$tile.metadata.position.x}px"
   bind:this={self}
-  class:Dragging={dragging === true}>
-  <div class="Header" on:mousedown={handleDragStart}>
+  class:Dragging={$dragging}>
+  <div class="Header" on:mousedown={handleDragStart} on:click={handleSelection}>
     <span>{$tile.definition.name}</span>
   </div>
   <div class="Body">
     <div class="Inputs">
-      {#each Object.entries($tile.definition.pins) as [name, pin], i}
+      {#each Object.entries($tile.definition.pins) as [_name, pin], _i}
         {#if pin.position === PIN_INPUT}
           <div
             class="Pin"
@@ -258,7 +320,7 @@
       {/each}
     </div>
     <div class="Outputs">
-      {#each Object.entries($tile.definition.pins) as [name, pin], i}
+      {#each Object.entries($tile.definition.pins) as [_name, pin], _i}
         {#if pin.position === PIN_OUTPUT}
           <div
             class="Pin"
