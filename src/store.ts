@@ -69,3 +69,13 @@ export const tileSelection = (() => {
     }
   }
 })() as WritableTileSelection;
+
+export interface DraggingSession {
+  startX: number;
+  startY: number;
+  startPageX: number;
+  startPageY: number;
+  tile: Tile;
+}
+
+export const draggingSession = writable(null) as Writable<DraggingSession | null>;
